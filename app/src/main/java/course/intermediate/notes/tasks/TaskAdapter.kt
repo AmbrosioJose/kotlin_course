@@ -8,6 +8,8 @@ import course.intermediate.notes.R
 import course.intermediate.notes.foundations.BaseRecyclerAdapter
 import course.intermediate.notes.models.Task
 import kotlinx.android.synthetic.main.item_task.view.*
+import kotlinx.android.synthetic.main.view_todo.view.*
+import course.intermediate.notes.views.TaskView
 
 class TaskAdapter(
     taskList: MutableList<Task> = mutableListOf()
@@ -22,7 +24,7 @@ class TaskAdapter(
     class ViewHolder(view: View): BaseViewHolder<Task>(view) {
 
         override fun onBind(data: Task){
-            view.titleView.text = data.title
+            (view as TaskView).initView(data)
         }
     }
 }
