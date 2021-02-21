@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_notes_list.*
 class TasksListFragment : Fragment() {
 
     lateinit var touchActionDelegate: TouchActionDelegate
+    val viewModel: TaskViewModel = TaskViewModel()
 
     override fun onAttach(context: Context){
         super.onAttach(context)
@@ -40,13 +41,7 @@ class TasksListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapter(mutableListOf(
-            Task("Testing 1", mutableListOf(
-                Todo("Todo 1", true),
-                Todo("Todo 2")
-            )),
-            Task("Testing 2")
-        ),
+        val adapter = TaskAdapter(mutableListOf(),
         touchActionDelegate)
 
         recyclerView.adapter = adapter
