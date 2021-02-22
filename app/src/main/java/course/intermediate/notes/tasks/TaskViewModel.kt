@@ -6,7 +6,7 @@ import course.intermediate.notes.models.Todo
 
 class TaskViewModel : ViewModel() {
 
-    fun getFakeData(): List<Task> = mutableListOf(
+    fun getFakeData(): MutableList<Task> = mutableListOf(
         Task(
             "Testing 1", mutableListOf(
                 Todo("Todo 1", true),
