@@ -21,10 +21,10 @@ class NotesListFragment : Fragment() {
 
     lateinit var touchActionDelegate: TouchActionDelegate
     private lateinit var viewModel: NoteViewModel
+    private lateinit var contentView: NoteListView
 
     override fun onAttach(context: Context){
         super.onAttach(context)
-
         context.let{
             if(context is TouchActionDelegate){
                 touchActionDelegate = context
@@ -36,22 +36,27 @@ class NotesListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_notes_list, container, false)
+        return inflater.inflate(R.layout.fragment_notes_list, container, false).apply{
+            contentView = this as NoteListView
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        setContentView()
+    }
 
-        val adapter = NotesAdapter(viewModel.getFakeData(), touchActionDelegate)
-
-        recyclerView.adapter = adapter
+    private fun setContentView(){
+        contentView.initView(touchActionDelegate)
     }
 
     private fun bindViewModel(){
         viewModel = ViewModelProvider(this).get(NoteViewModel::class.java)
 
+        viewModel.notesLiveData.observe(viewLifecycleOwner, Observer{notesList ->
+            contentView.updateList(notesList)
+        })
     }
 
     companion object {

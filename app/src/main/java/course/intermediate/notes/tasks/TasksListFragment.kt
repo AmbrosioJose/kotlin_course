@@ -14,11 +14,13 @@ import course.intermediate.notes.models.Todo
 import kotlinx.android.synthetic.main.fragment_notes_list.*
 import androidx.lifecycle.ViewModelProvider
 import course.intermediate.notes.tasks.TasksListFragment.TouchActionDelegate as TouchActionDelegate
+import androidx.lifecycle.Observer
 
 class TasksListFragment : Fragment() {
 
     lateinit var touchActionDelegate: TouchActionDelegate
     lateinit var viewModel: TaskViewModel
+    lateinit var contentView: TaskListView
 
     override fun onAttach(context: Context){
         super.onAttach(context)
@@ -32,20 +34,27 @@ class TasksListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_tasks_list, container, false)
+        return inflater.inflate(R.layout.fragment_tasks_list, container, false).apply{
+            contentView = this as TaskListView
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         bindViewModel()
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        val adapter = TaskAdapter(viewModel.getFakeData(), touchActionDelegate)
-        recyclerView.adapter = adapter
+        setContentView()
+    }
+
+    private fun setContentView(){
+        contentView.initView(touchActionDelegate, viewModel)
     }
 
     private fun bindViewModel(){
         viewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
+
+        viewModel.taskListLiveData.observe(viewLifecycleOwner, Observer{ taskList ->
+            contentView.updateList(taskList)
+        })
     }
 
     companion object {

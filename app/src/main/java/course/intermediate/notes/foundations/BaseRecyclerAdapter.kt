@@ -6,8 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import course.intermediate.notes.tasks.TaskAdapter
 
 abstract class BaseRecyclerAdapter<T>(
-    protected val list: MutableList<T> = mutableListOf()
+    protected val masterList: MutableList<T> = mutableListOf()
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    fun updateList(list: List<T>){
+        masterList.clear()
+        masterList.addAll(list)
+        notifyDataSetChanged()
+    }
 
     override fun getItemViewType(position: Int): Int = if(position == 0){
         TYPE_ADD_BUTTON
@@ -17,15 +23,15 @@ abstract class BaseRecyclerAdapter<T>(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is AddButtonViewHolder){
-            holder.onBind(Unit)
+            holder.onBind(Unit, position - 1)
         } else
-            (holder as BaseViewHolder<T>).onBind(list[position - 1])
+            (holder as BaseViewHolder<T>).onBind(masterList[position - 1], position - 1)
     }
 
-    override fun getItemCount(): Int = list.size + 1
+    override fun getItemCount(): Int = masterList.size + 1
 
     abstract class  BaseViewHolder<E>(val  view: View) : RecyclerView.ViewHolder(view){
-        abstract  fun onBind(data: E)
+        abstract  fun onBind(data: E, listIndex: Int)
     }
 
     abstract class AddButtonViewHolder(view: View): BaseViewHolder<Unit>(view)
