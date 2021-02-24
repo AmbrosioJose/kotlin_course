@@ -7,15 +7,12 @@ import androidx.lifecycle.LiveData
 
 class NoteViewModel : ViewModel(), NoteListViewContract {
 
+    private val model: NoteModel = NoteModel()
+
     private val _notesLiveData: MutableLiveData<List<Note>> = MutableLiveData()
     val notesLiveData: LiveData<List<Note>> = _notesLiveData
 
     init {
-        _notesLiveData.postValue(getFakeData())
+        _notesLiveData.postValue(model.getFakeData())
     }
-
-    fun getFakeData(): MutableList<Note> = mutableListOf(
-        Note("Hey keep working hard. It will Pay off."),
-        Note("you got this!! Keep going"),
-        Note("Life is good"))
 }
