@@ -5,15 +5,20 @@ import course.intermediate.notes.models.Task
 import course.intermediate.notes.models.Todo
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
+import javax.inject.Inject
+import toothpick.Toothpick
 
 class TaskViewModel : ViewModel(), TaskListViewContract {
 
-    private val model: TaskModel = TaskModel()
+    @Inject
+    lateinit var model: TaskModel
 
     private val _taskListLiveData: MutableLiveData<MutableList<Task>> = MutableLiveData()
     val taskListLiveData: LiveData<MutableList<Task>> = _taskListLiveData
 
     init {
+        val scope = Toothpick.openScope(this)
+        Toothpick.inject(this, scope)
         _taskListLiveData.postValue(model.getFakeData())
     }
 
