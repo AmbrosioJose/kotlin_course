@@ -5,11 +5,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create.*
 import course.intermediate.notes.navigation.NavigationActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 
 class CreateActivity : AppCompatActivity() {
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
+
+        supportActionBar?.title = ""
 
         intent.getStringExtra(NavigationActivity.FRAGMENT_TYPE_KEY).run{
             textView.text = if(this == NavigationActivity.FRAGMENT_VALUE_TASK){
@@ -26,5 +31,18 @@ class CreateActivity : AppCompatActivity() {
 //            "This is a note"
 //        }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean{
+        menuInflater.inflate(R.menu.menu_save, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.saveItem -> Toast.makeText(this, "SaveClicked!", Toast.LENGTH_SHORT).show()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
