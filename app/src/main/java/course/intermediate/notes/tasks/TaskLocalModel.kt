@@ -3,6 +3,7 @@ package course.intermediate.notes.tasks
 import course.intermediate.notes.models.Task
 import course.intermediate.notes.models.Todo
 import javax.inject.Inject
+import android.util.Log
 
 class TaskLocalModel @Inject constructor(): ITaskModel {
 
@@ -21,7 +22,8 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
     )
 
     override fun addTask(task: Task, callback: SuccessCallback){
-
+        Log.d("CourseTag", task.toString())
+        callback.invoke(true)
     }
 
     override fun updateTask(task: Task, callback: SuccessCallback){

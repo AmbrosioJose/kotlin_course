@@ -3,6 +3,7 @@ package course.intermediate.notes.notes
 import course.intermediate.notes.models.Note
 import course.intermediate.notes.notes.INoteModel
 import javax.inject.Inject
+import android.util.Log
 
 class NoteLocalModel @Inject constructor() : INoteModel{
 
@@ -12,7 +13,8 @@ class NoteLocalModel @Inject constructor() : INoteModel{
         Note("Life is good"))
 
     override fun addNote(note: Note, callback: SuccessCallback){
-
+        Log.d("UdemyCourse", note.toString())
+        callback.invoke(true)
     }
 
     override fun updateNote(note: Note, callback: SuccessCallback){
