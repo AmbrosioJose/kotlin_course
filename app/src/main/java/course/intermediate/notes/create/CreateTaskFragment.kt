@@ -19,12 +19,14 @@ import course.intermediate.notes.tasks.ITaskModel
 import course.intermediate.notes.foundations.ApplicationScope
 import course.intermediate.notes.foundations.NullFieldChecker
 import toothpick.Toothpick
+import javax.inject.Inject
 
 
 private const val MAX_TODO_COUNT = 5
 
 class CreateTaskFragment : Fragment() {
 
+    @Inject
     lateinit var model: ITaskModel
 
     var listener: OnFragmentInteractionListener? = null
@@ -51,9 +53,7 @@ class CreateTaskFragment : Fragment() {
                 if(!s.isNullOrEmpty() && previousValue.isNullOrEmpty()){
                     addTodoView()
                 }
-//                else if(!previousValue.isNullOrEmpty() && s.isNullOrEmpty()){
-//                    removeTodoView(containerView.getChildAt(containerView.childCount - 1))
-//                }
+
                 super.afterTextChanged(s)
             }
         })
@@ -81,7 +81,7 @@ class CreateTaskFragment : Fragment() {
                     } else {
                         if(containerView.getChildAt(i).taskEditText.editableText.isNullOrEmpty()){
                             todoList.add(
-                                Todo(containerView.getChildAt(i).taskEditText.editableText.toString()))
+                                Todo(description = containerView.getChildAt(i).taskEditText.editableText.toString()))
                         }
                     }
                 }
@@ -122,9 +122,6 @@ class CreateTaskFragment : Fragment() {
                     }
                 })
             }
-
-
-
             containerView.addView(view)
         }
     }

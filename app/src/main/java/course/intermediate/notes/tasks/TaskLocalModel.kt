@@ -4,20 +4,24 @@ import course.intermediate.notes.models.Task
 import course.intermediate.notes.models.Todo
 import javax.inject.Inject
 import android.util.Log
+import course.intermediate.notes.application.NoteApplication
+import course.intermediate.notes.database.RoomDatabaseClient
 
 class TaskLocalModel @Inject constructor(): ITaskModel {
+
+    private var databaseClient: RoomDatabaseClient = RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
     override fun getFakeData(): MutableList<Task> = mutableListOf(
         Task(
             "Testing 1", mutableListOf(
-                Todo("Todo 1", true),
-                Todo("Todo 2")
+                Todo(description = "Todo 1", isComplete = true),
+                Todo(description = "Todo 2")
             )
         ),
         Task("Testing 2"),
         Task("Task Three", mutableListOf(
-            Todo("Test A!"),
-            Todo("Test B!")
+            Todo(description = "Test A!"),
+            Todo(description = "Test B!")
         ))
     )
 

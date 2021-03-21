@@ -22,7 +22,6 @@ class TaskViewModel : ViewModel(), TaskListViewContract {
     val taskListLiveData: LiveData<MutableList<Task>> = _taskListLiveData
 
     init {
-
         Toothpick.inject(this, ApplicationScope.scope)
         _taskListLiveData.postValue(model.getFakeData())
     }

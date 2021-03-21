@@ -15,20 +15,16 @@ class CreateActivity : AppCompatActivity(), CreateNoteFragment.OnFragmentInterac
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
 
+
         supportActionBar?.title = ""
 
-        intent.getStringExtra(NavigationActivity.FRAGMENT_TYPE_KEY).run{
+        intent?.getStringExtra(NavigationActivity.FRAGMENT_TYPE_KEY).run{
             if(this == NavigationActivity.FRAGMENT_VALUE_TASK){
                 createFragment(CreateTaskFragment.newInstance())
             } else if(this == NavigationActivity.FRAGMENT_VALUE_NOTE){
                 createFragment(CreateNoteFragment.newInstance())
             }
         }
-//        textView.text = if(intent.getStringExtra(NavigationActivity.FRAGMENT_TYPE_KEY) == NavigationActivity.FRAGMENT_VALUE_TASK){
-//            "This is a task"
-//        } else if(intent.getStringExtra(Navigation)){
-//            "This is a note"
-//        }
 
     }
 

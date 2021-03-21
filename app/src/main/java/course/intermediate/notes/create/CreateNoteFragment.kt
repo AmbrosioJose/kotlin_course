@@ -53,7 +53,7 @@ class CreateNoteFragment : Fragment(), NullFieldChecker {
 
     private fun createNote(): Note? {
         return if(!hasNullField())
-             Note(noteEditText.editableText.toString())
+             Note(description = noteEditText.editableText.toString())
         else
             return null
     }

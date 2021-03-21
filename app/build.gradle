@@ -41,12 +41,20 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = "2.2.0"
-//
-//    // ViewModel and LiveData
-//    implementation "andriodx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    def lifecycle_version = "2.0.0"
+    def room_version = "2.1.0-alpha03"
 
+    // Room Library
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // Toothpick
+    kapt 'com.github.stephanenicolas.toothpick:toothpick-compiler:1.1.3'
+    testImplementation 'com.github.stephanenicolas.toothpick:toothpick-testing:1.1.3'
+
+    // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    
     implementation "androidx.fragment:fragment-ktx:1.2.2"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -61,6 +69,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.github.stephanenicolas.toothpick:toothpick-runtime:1.1.3"
     implementation 'com.github.stephanenicolas.toothpick:smoothie:1.1.3'
-    kapt 'com.github.stephanenicolas.toothpick:toothpick-compiler:1.1.3'
-    testImplementation 'com.github.stephanenicolas.toothpick:toothpick-testing:1.1.3'
+
+
 }
