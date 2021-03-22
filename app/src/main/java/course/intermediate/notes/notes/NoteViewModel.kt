@@ -21,6 +21,17 @@ class NoteViewModel : ViewModel(), NoteListViewContract {
     init {
         
         Toothpick.inject(this, ApplicationScope.scope)
+        loadData()
+    }
+
+    fun loadData() {
         _notesLiveData.postValue(localModel.getFakeData())
+    }
+
+    override fun onDeleteNote(note: Note){
+        localModel.deleteNote(note){ deleted ->
+            if(deleted)
+                loadData()
+        }
     }
 }

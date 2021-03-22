@@ -15,7 +15,8 @@ import course.intermediate.notes.notes.NotesListFragment.TouchActionDelegate
 
 class NotesAdapter(
     notesList: MutableList<Note> = mutableListOf(),
-    var touchActionDelegate: TouchActionDelegate
+    val touchActionDelegate: TouchActionDelegate,
+    val dataActionDelegate: NoteListViewContract
 ) : BaseRecyclerAdapter<Note>(notesList) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
@@ -25,9 +26,11 @@ class NotesAdapter(
             NoteViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false))
 
 
-    class NoteViewHolder(view : View): BaseViewHolder<Note>(view) {
+    inner class NoteViewHolder(view : View): BaseViewHolder<Note>(view) {
         override fun onBind(data: Note, listIndex: Int) {
-            (view as NoteView).initView(data)
+            (view as NoteView).initView(data) {
+                dataActionDelegate.onDeleteNote(masterList[listIndex])
+            }
         }
     }
 

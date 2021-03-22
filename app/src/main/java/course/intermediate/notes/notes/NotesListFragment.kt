@@ -32,6 +32,12 @@ class NotesListFragment : Fragment() {
         }
     }
 
+
+    override fun onResume(){
+        super.onResume()
+        viewModel.loadData()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,7 +54,7 @@ class NotesListFragment : Fragment() {
     }
 
     private fun setContentView(){
-        contentView.initView(touchActionDelegate)
+        contentView.initView(touchActionDelegate, viewModel)
     }
 
     private fun bindViewModel(){
