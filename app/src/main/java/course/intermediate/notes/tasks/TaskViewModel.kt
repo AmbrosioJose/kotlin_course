@@ -23,7 +23,11 @@ class TaskViewModel : ViewModel(), TaskListViewContract {
 
     init {
         Toothpick.inject(this, ApplicationScope.scope)
-        _taskListLiveData.postValue(model.getFakeData())
+        loadData()
+    }
+
+    fun loadData() {
+        _taskListLiveData.postValue(model.retrieveTasks().toMutableList())
     }
 
 
