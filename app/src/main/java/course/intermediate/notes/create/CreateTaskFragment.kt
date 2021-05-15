@@ -68,7 +68,7 @@ class CreateTaskFragment : Fragment() {
         } ?: callback.invoke(false)
     }
 
-    fun createTask(): Task? {
+    private fun createTask(): Task? {
         if(!isTaskEmpty()) {
             containerView.run{
                 var taskField: String? = null

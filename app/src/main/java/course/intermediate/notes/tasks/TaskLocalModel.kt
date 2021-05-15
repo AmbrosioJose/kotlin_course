@@ -4,6 +4,7 @@ import course.intermediate.notes.models.Task
 import javax.inject.Inject
 import course.intermediate.notes.application.NoteApplication
 import course.intermediate.notes.database.RoomDatabaseClient
+import course.intermediate.notes.models.Todo
 
 class TaskLocalModel @Inject constructor(): ITaskModel {
 
@@ -19,6 +20,11 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
 
     override fun updateTask(task: Task, callback: SuccessCallback){
         databaseClient.taskDAO().updateTask(task)
+        callback.invoke(true)
+    }
+
+    override fun updateTodo(todo: Todo, callback: SuccessCallback){
+        databaseClient.taskDAO().updateTodo(todo)
         callback.invoke(true)
     }
 

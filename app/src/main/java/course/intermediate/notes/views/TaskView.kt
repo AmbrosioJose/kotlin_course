@@ -17,22 +17,41 @@ class TaskView @JvmOverloads constructor(
 
     lateinit var task: Task
 
-    fun initView(task: Task, todoCheckedCallback: (Int, Boolean) -> Unit){
+    fun initView(task: Task, todoCheckedCallback: (Int, Boolean) -> Unit, deleteCallback : () -> Unit){
+        resetChildViews()
         this.task = task
-        titleView.text = task.title
-        task.todos.forEachIndexed{ todoIndex, todo ->
-            val todoView = (LayoutInflater.from(context).inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply{
-                initView(todo) { isChecked ->
+        initTaskLine(deleteCallback)
+        addChildViews(todoCheckedCallback)
+    }
 
-                    todoCheckedCallback.invoke(todoIndex, isChecked)
-                    if(isTaskComplete())
-                        this@TaskView.titleView.setStrikeThrough()
-                    else
-                        this@TaskView.titleView.removeStrikeThrough()
-                }
-            }
-            todoContainer.addView(todoView)
+    private fun initTaskLine(deleteCallback: () -> Unit){
+        titleView.text = task.title
+
+        imageButton.setOnClickListener{
+            deleteCallback.invoke()
         }
+    }
+
+    private fun addChildViews(todoCheckedCallback: (Int, Boolean) -> Unit){
+        task.todos.forEachIndexed{ todoIndex, todo ->
+            val todoView =
+                (LayoutInflater.from(context).inflate(R.layout.view_todo, todoContainer, false) as TodoView).apply {
+                    initView(todo) { isChecked ->
+                        todoCheckedCallback.invoke(todoIndex, isChecked)
+
+                        if(isTaskComplete())
+                            this@TaskView.titleView.setStrikeThrough()
+                        else
+                            this@TaskView.titleView.removeStrikeThrough()
+                    }
+                }
+            todoContainer.addView(todoView)
+
+        }
+    }
+
+    private fun resetChildViews(){
+        todoContainer.removeAllViewsInLayout()
     }
 
     private fun isTaskComplete(): Boolean = task.todos.all { todo ->

@@ -30,8 +30,25 @@ class TaskViewModel : ViewModel(), TaskListViewContract {
         _taskListLiveData.postValue(model.retrieveTasks().toMutableList())
     }
 
-
     override fun onTodoUpdated(taskIndex: Int, todoIndex: Int, isComplete: Boolean) {
-        _taskListLiveData.value?.get(taskIndex)?.todos?.get(todoIndex)?.isComplete = isComplete
+        _taskListLiveData.value?.let{
+            val todo = it[taskIndex].todos[todoIndex]
+            todo.apply {
+                this.isComplete = isComplete
+                this.taskId = it[taskIndex].uid
+            }
+            model.updateTodo(todo) {
+                loadData()
+            }
+        }
+    }
+
+    override fun onTaskDeleted(taskIndex: Int){
+        println("deleting index!!!!: $taskIndex")
+        _taskListLiveData.value?.let{
+            model.deleteTask(it[taskIndex]) {
+                loadData()
+            }
+        }
     }
 }

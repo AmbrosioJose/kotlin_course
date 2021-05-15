@@ -32,6 +32,7 @@ class TasksListFragment : Fragment() {
 
     override fun onResume(){
         super.onResume()
+        print("Called on RESUME!!!!!!")
         viewModel.loadData()
     }
 
