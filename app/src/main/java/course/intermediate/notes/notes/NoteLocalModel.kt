@@ -28,6 +28,7 @@ class NoteLocalModel @Inject constructor() : INoteModel{
                     false
                 }
             }
+            callback.invoke(job.await())
         }
     }
 

@@ -4,7 +4,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_notes_list.*
 import kotlinx.android.synthetic.main.fragment_notes_list.view.*
 import course.intermediate.notes.models.Note
 
@@ -19,8 +18,13 @@ class NoteListView @JvmOverloads constructor(
     private lateinit var dataActionDelegate: NoteListViewContract
 
     fun initView(touchActionDelegate: NotesListFragment.TouchActionDelegate, daDelegate: NoteListViewContract){
+        resetChildViews()
         setDelegates(touchActionDelegate, daDelegate)
         setUpView()
+    }
+
+    private fun resetChildViews(){
+        recyclerView.removeAllViewsInLayout()
     }
 
     fun setDelegates(touchActionDelegate: NotesListFragment.TouchActionDelegate, daDelegate: NoteListViewContract){

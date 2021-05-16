@@ -25,7 +25,9 @@
         app:layout_constraintBottom_toBottomOf="@id/descriptionView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/descriptionView"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+        android:layout_marginEnd="@dimen/item_margin_default"
+        android:src="@drawable/ic_delete"
+        android:background="@color/transparent"/>
 
 
 </course.intermediate.notes.views.NoteView>
