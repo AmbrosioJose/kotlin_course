@@ -32,7 +32,7 @@ abstract class RoomDatabaseClient : RoomDatabase(){
 
         private fun createDatabase(context: Context): RoomDatabaseClient {
             return Room.databaseBuilder(context, RoomDatabaseClient::class.java, DB_NAME)
-                .allowMainThreadQueries()
+//                .allowMainThreadQueries()
                 .build()
         }
     }

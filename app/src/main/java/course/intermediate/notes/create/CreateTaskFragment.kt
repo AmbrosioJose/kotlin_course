@@ -60,10 +60,10 @@ class CreateTaskFragment : Fragment() {
     }
 
     fun saveTask(callback: (Boolean) -> Unit) {
-        createTask()?.let {
-            model.addTask(it){
+        createTask()?.let {task ->
+            model.addTask(task){ success ->
                 // assume model always works
-                callback.invoke(true)
+                callback.invoke(success)
             }
         } ?: callback.invoke(false)
     }

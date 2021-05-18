@@ -33,7 +33,7 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
         }
     }
 
-    override fun getFakeData(): MutableList<Task> = retrieveTasks().toMutableList()
+//    override fun getFakeData(): MutableList<Task> = retrieveTasks().toMutableList()
 
     override fun addTask(task: Task, callback: SuccessCallback){
         GlobalScope.launch {
@@ -46,14 +46,15 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
                 }
                 addTodosJob(task)
             }
-
+            masterJob.await()
+            callback.invoke(true)
         }
 //        databaseClient.taskDAO().addTask(task)
 //        addTodosInTask(task)
 //        callback.invoke(true)
     }
 
-    override fun addTodosJob(task: Task): Job = GlobalScope.async {
+    private fun addTodosJob(task: Task): Job = GlobalScope.async {
         task.todos.forEach {
             databaseClient.taskDAO().addTodo(it)
         }
@@ -86,6 +87,7 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
                     databaseClient.taskDAO().retrieveTasks()
                 }
             }
+            callback.invoke(job.await())
         }
     }
 }
