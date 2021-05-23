@@ -12,6 +12,8 @@ import toothpick.Toothpick
 import toothpick.config.Module
 import course.intermediate.notes.foundations.ApplicationModule
 import course.intermediate.notes.foundations.ApplicationScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class TaskViewModel : ViewModel(), TaskListViewContract {
 
@@ -27,32 +29,38 @@ class TaskViewModel : ViewModel(), TaskListViewContract {
     }
 
     fun loadData() {
-        model.retrieveTasks { tasksList ->
-            tasksList?.let{
-                _taskListLiveData.postValue(it.toMutableList())
+        GlobalScope.launch {
+            model.retrieveTasks { tasksList ->
+                tasksList?.let{
+                    _taskListLiveData.postValue(it.toMutableList())
+                }
             }
         }
-//        _taskListLiveData.postValue(model.retrieveTasks().toMutableList())
     }
+//        _taskListLiveData.postValue(model.retrieveTasks().toMutableList())
 
     override fun onTodoUpdated(taskIndex: Int, todoIndex: Int, isComplete: Boolean) {
-        _taskListLiveData.value?.let{
-            val todo = it[taskIndex].todos[todoIndex]
-            todo.apply {
-                this.isComplete = isComplete
-                this.taskId = it[taskIndex].uid
-            }
-            model.updateTodo(todo) {
-                loadData()
+        GlobalScope.launch {
+            _taskListLiveData.value?.let{
+                val todo = it[taskIndex].todos[todoIndex]
+                todo.apply {
+                    this.isComplete = isComplete
+                    this.taskId = it[taskIndex].uid
+                }
+                model.updateTodo(todo) {
+                    loadData()
+                }
             }
         }
     }
 
     override fun onTaskDeleted(taskIndex: Int){
         println("deleting index!!!!: $taskIndex")
-        _taskListLiveData.value?.let{
-            model.deleteTask(it[taskIndex]) {
-                loadData()
+        GlobalScope.launch {
+            _taskListLiveData.value?.let{
+                model.deleteTask(it[taskIndex]) {
+                    loadData()
+                }
             }
         }
     }

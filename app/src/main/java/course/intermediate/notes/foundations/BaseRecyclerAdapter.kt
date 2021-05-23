@@ -11,10 +11,13 @@ abstract class BaseRecyclerAdapter<T>(
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun updateList(list: List<T>){
-        val result = DiffUtil.calculateDiff(DiffUtilCallbackImpl(masterList, list))
+        // cleared master list then added updated one and lastly called notifyDataSetChanged
+        // DiffUtil wasn't always working for new values.
+//        val result = DiffUtil.calculateDiff(DiffUtilCallbackImpl(masterList, list))
         masterList.clear()
         masterList.addAll(list)
-        result.dispatchUpdatesTo(this)
+        notifyDataSetChanged()
+//        result.dispatchUpdatesTo(this)
     }
 
     override fun getItemViewType(position: Int): Int = if(position == 0){

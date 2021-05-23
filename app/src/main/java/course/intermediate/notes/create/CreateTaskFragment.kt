@@ -18,6 +18,8 @@ import course.intermediate.notes.models.Todo
 import course.intermediate.notes.tasks.ITaskModel
 import course.intermediate.notes.foundations.ApplicationScope
 import course.intermediate.notes.foundations.NullFieldChecker
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -60,12 +62,14 @@ class CreateTaskFragment : Fragment() {
     }
 
     fun saveTask(callback: (Boolean) -> Unit) {
-        createTask()?.let {task ->
-            model.addTask(task){ success ->
-                // assume model always works
-                callback.invoke(success)
-            }
-        } ?: callback.invoke(false)
+        GlobalScope.launch {
+            createTask()?.let {task ->
+                model.addTask(task){ success ->
+                    // assume model always works
+                    callback.invoke(success)
+                }
+            } ?: callback.invoke(false)
+        }
     }
 
     private fun createTask(): Task? {

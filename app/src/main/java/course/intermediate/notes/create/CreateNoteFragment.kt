@@ -14,6 +14,8 @@ import javax.inject.Inject
 import toothpick.Toothpick
 import course.intermediate.notes.foundations.ApplicationScope
 import course.intermediate.notes.notes.INoteModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -27,7 +29,7 @@ class CreateNoteFragment : Fragment(), NullFieldChecker {
     @Inject
     lateinit var model: INoteModel
 
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Toothpick.inject(this, ApplicationScope.scope)
@@ -43,24 +45,26 @@ class CreateNoteFragment : Fragment(), NullFieldChecker {
         return inflater.inflate(R.layout.fragment_create_note, container, false)
     }
 
-    fun saveNote(callback: (Boolean) -> Unit){
-        createNote()?.let{ note ->
-            model.addNote(note){ success ->
-                callback.invoke(success)
+    fun saveNote(callback: (Boolean) -> Unit) {
+        createNote()?.let { note ->
+            GlobalScope.launch {
+                model.addNote(note) { success ->
+                    callback.invoke(success)
+                }
             }
         } ?: callback.invoke(false)
     }
 
     private fun createNote(): Note? {
-        return if(!hasNullField())
-             Note(description = noteEditText.editableText.toString())
+        return if (!hasNullField())
+            Note(description = noteEditText.editableText.toString())
         else
             return null
     }
 
-    override fun onAttach(context: Context){
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is OnFragmentInteractionListener){
+        if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must Implement OnFragmentInteractionListener")
@@ -81,7 +85,7 @@ class CreateNoteFragment : Fragment(), NullFieldChecker {
         }
     }
 
-    interface OnFragmentInteractionListener{
+    interface OnFragmentInteractionListener {
         fun onFragmentInteraction()
     }
 

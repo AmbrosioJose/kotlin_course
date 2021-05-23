@@ -13,45 +13,42 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.Job
 
-class TaskLocalModel @Inject constructor(): ITaskModel {
+class TaskLocalModel @Inject constructor() : ITaskModel {
 
-    private var databaseClient: RoomDatabaseClient = RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
+    private var databaseClient: RoomDatabaseClient =
+        RoomDatabaseClient.getInstance(NoteApplication.instance.applicationContext)
 
-    private fun performOperationWithTimeout(function: () -> Unit, callback: SuccessCallback) {
-        GlobalScope.launch {
-            val job = async {
-                try {
-                    withTimeout(TIMEOUT_DURATION_MILLIS){
-                        function.invoke()
-                    }
-                } catch (e: java.lang.Exception) {
-                    callback.invoke(false)
+    private suspend fun performOperationWithTimeout(
+        function: () -> Unit,
+        callback: SuccessCallback
+    ) {
+        val job = GlobalScope.async {
+            try {
+                withTimeout(TIMEOUT_DURATION_MILLIS) {
+                    function.invoke()
                 }
+            } catch (e: java.lang.Exception) {
+                callback.invoke(false)
             }
-            job.await()
-            callback.invoke(true)
         }
+        job.await()
+        callback.invoke(true)
     }
 
 //    override fun getFakeData(): MutableList<Task> = retrieveTasks().toMutableList()
 
-    override fun addTask(task: Task, callback: SuccessCallback){
-        GlobalScope.launch {
-            val masterJob = async {
-                // adds task entity component
-                try {
-                    databaseClient.taskDAO().addTask(task)
-                } catch (e: Exception){
-                    callback.invoke(false)
-                }
-                addTodosJob(task)
+    override suspend fun addTask(task: Task, callback: SuccessCallback) {
+        val masterJob = GlobalScope.async {
+            // adds task entity component
+            try {
+                databaseClient.taskDAO().addTask(task)
+            } catch (e: Exception) {
+                callback.invoke(false)
             }
-            masterJob.await()
-            callback.invoke(true)
+            addTodosJob(task)
         }
-//        databaseClient.taskDAO().addTask(task)
-//        addTodosInTask(task)
-//        callback.invoke(true)
+        masterJob.await()
+        callback.invoke(true)
     }
 
     private fun addTodosJob(task: Task): Job = GlobalScope.async {
@@ -60,16 +57,16 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
         }
     }
 
-    override fun updateTask(task: Task, callback: SuccessCallback){
-        performOperationWithTimeout({databaseClient.taskDAO().updateTask(task)}, callback)
+    override suspend fun updateTask(task: Task, callback: SuccessCallback) {
+        performOperationWithTimeout({ databaseClient.taskDAO().updateTask(task) }, callback)
     }
 
-    override fun updateTodo(todo: Todo, callback: SuccessCallback){
-        performOperationWithTimeout({databaseClient.taskDAO().updateTodo(todo)}, callback)
+    override suspend fun updateTodo(todo: Todo, callback: SuccessCallback) {
+        performOperationWithTimeout({ databaseClient.taskDAO().updateTodo(todo) }, callback)
     }
 
-    override fun deleteTask(task: Task, callback: SuccessCallback){
-        performOperationWithTimeout({databaseClient.taskDAO().deleteTask(task)}, callback)
+    override suspend fun deleteTask(task: Task, callback: SuccessCallback) {
+        performOperationWithTimeout({ databaseClient.taskDAO().deleteTask(task) }, callback)
     }
 
 //    private fun addTodos
@@ -80,14 +77,12 @@ class TaskLocalModel @Inject constructor(): ITaskModel {
 //        }
 //    }
 
-    override fun retrieveTasks(callback: (List<Task>?) -> Unit) {
-        GlobalScope.launch {
-            val job = async {
-                withTimeoutOrNull(TIMEOUT_DURATION_MILLIS){
-                    databaseClient.taskDAO().retrieveTasks()
-                }
+    override suspend fun retrieveTasks(callback: (List<Task>?) -> Unit) {
+        val job = GlobalScope.async {
+            withTimeoutOrNull(TIMEOUT_DURATION_MILLIS) {
+                databaseClient.taskDAO().retrieveTasks()
             }
-            callback.invoke(job.await())
         }
+        callback.invoke(job.await())
     }
 }
