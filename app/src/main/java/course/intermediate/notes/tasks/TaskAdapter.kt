@@ -29,10 +29,10 @@ class TaskAdapter(
             (view as TaskView).initView(
                 task = data,
                 todoCheckedCallback = { todoIndex, isChecked ->
-                    dataActionDelegate.onTodoUpdated(listIndex, todoIndex, isChecked)
+                    dataActionDelegate.onTodoUpdated(adapterPosition - 1, todoIndex, isChecked)
                 },
                 deleteCallback = {
-                    dataActionDelegate.onTaskDeleted(listIndex)
+                    dataActionDelegate.onTaskDeleted(adapterPosition - 1)
                 }
             )
         }

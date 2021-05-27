@@ -10,6 +10,16 @@ abstract class BaseRecyclerAdapter<T>(
     protected val masterList: MutableList<T> = mutableListOf()
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    fun onItemDeleted(indexInList: Int, indexInView: Int) {
+        masterList.removeAt(indexInList)
+        notifyItemRemoved(indexInView)
+    }
+
+    fun onItemUpdated(newItem: T, indexInList: Int, indexInView: Int){
+        masterList[indexInList] = newItem
+        notifyItemChanged(indexInView)
+    }
+
     fun updateList(list: List<T>){
         // cleared master list then added updated one and lastly called notifyDataSetChanged
         // DiffUtil wasn't always working for new values.

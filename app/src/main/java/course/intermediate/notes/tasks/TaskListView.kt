@@ -24,12 +24,12 @@ class TaskListView @JvmOverloads constructor(
         setUpView()
     }
 
-    fun setDelegates(taDelegate: TasksListFragment.TouchActionDelegate, daDelegate: TaskListViewContract){
+    private fun setDelegates(taDelegate: TasksListFragment.TouchActionDelegate, daDelegate: TaskListViewContract){
         touchActionDelegate = taDelegate
         dataActionDelegate = daDelegate
     }
 
-    fun setUpView(){
+    private fun setUpView(){
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = TaskAdapter(
             touchActionDelegate= touchActionDelegate,
@@ -42,4 +42,14 @@ class TaskListView @JvmOverloads constructor(
     fun updateList(list: List<Task>){
         adapter.updateList(list)
     }
+
+    fun updateItem(newTask:Task, indexInList: Int, indexInView: Int){
+        adapter.onItemUpdated(newItem = newTask, indexInList = indexInList, indexInView =  indexInView)
+    }
+
+    fun deleteItem( indexInList: Int, indexInView: Int) {
+        adapter.onItemDeleted(indexInList = indexInList, indexInView = indexInView)
+    }
+
+
 }
